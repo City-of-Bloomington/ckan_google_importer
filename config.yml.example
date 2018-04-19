@@ -1,0 +1,11 @@
+---
+tmp_dir:  "/srv/data/importer"
+log_file: "/var/log/cron/importer"
+ckan:
+  url:     "https://data.ckan.somewhere"
+  api_key: "XXXX-XX-XX-XXXXX"
+spreadsheets:
+  - resource_id:    "XXXX-XX-XX-XXXXX"
+    spreadsheet_id: "XXXX-XX-XX-XXXXX"
+    sheet_id:       "123456789"
+...
