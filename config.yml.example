@@ -1,6 +1,5 @@
 ---
 tmp_dir:  "/srv/data/importer"
-log_file: "/var/log/cron/importer"
 ckan:
   url:     "https://data.ckan.somewhere"
   api_key: "XXXX-XX-XX-XXXXX"
