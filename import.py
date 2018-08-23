@@ -64,6 +64,7 @@ for s in doc['spreadsheets']:
         download.setopt(pycurl.WRITEDATA, f)
         download.perform()
 
+    with open(csv_file, 'rb') as f:
         upload.setopt(pycurl.HTTPPOST, [
             ('id',     resource_id),
             ('upload', (
