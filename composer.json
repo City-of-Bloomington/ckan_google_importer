@@ -1,0 +1,11 @@
+{
+    "require": {
+        "graylog2/gelf-php": "@stable",
+        "zendframework/zend-log": "@stable"
+    },
+    "autoload": {
+        "psr-4": {
+            "Application\\": "src/Application/"
+        }
+    }
+}

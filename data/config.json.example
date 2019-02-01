@@ -1,8 +1,8 @@
 {
     "tmp_dir": ".",
-    "skidder": {
-        "url": "https://apps.bloomington.in.gov/skidder",
-        "application_id": 999
+    "graylog": {
+        "domain": "graylog.example.org",
+        "port": 12201
     },
     "ckan": {
         "url": "https://data.ckan.somewhere",

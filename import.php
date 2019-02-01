@@ -4,7 +4,7 @@
  * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 declare (strict_types=1);
-include './SkidderService.php';
+include __DIR__.'/bootstrap.php';
 
 $opts = getopt('', ['help', 'config:']);
 if (isset($opts['help'])) {
@@ -39,6 +39,13 @@ if (!is_dir($config->tmp_dir)) {
     exit(1);
 }
 
+$graylog = new Application\Log\GraylogWriter($config->graylog->domain, $config->graylog->port);
+$logger  = new Zend\Log\Logger();
+$logger->addWriter($graylog);
+Zend\Log\Logger::registerErrorHandler($logger);
+Zend\Log\Logger::registerExceptionHandler($logger);
+Zend\Log\Logger::registerFatalErrorShutdownFunction($logger);
+
 $tmp_dir  = $config->tmp_dir;
 $ckan_url = $config->ckan->url . '/api/3/action/resource_update';
 $api_key  = $config->ckan->api_key;
@@ -68,11 +75,7 @@ foreach ($config->spreadsheets as $s) {
                                   CURLOPT_FILE => $fp        ]);
     $success = curl_exec($download);
     if (!$success) {
-        SkidderService::log($config->skidder->url, $config->skidder->application_id, [
-            'script'  => $google_url,
-            'type'    => 'Curl error',
-            'message' => curl_error($download)
-        ]);
+        $logger->log(Zend\Log\Logger::ERR, "Curl error: $google_url\n".curl_error($download));
     }
     fclose($fp);
 
@@ -82,28 +85,16 @@ foreach ($config->spreadsheets as $s) {
     ]);
     $response = curl_exec($upload);
     if (!$response) {
-        SkidderService::log($config->skidder->url, $config->skidder->application_id, [
-            'script'  => $ckan_url,
-            'type'    => 'Curl error',
-            'message' => "$csv_file\n{$s->resource_id}\n".curl_error($upload)
-        ]);
+        $logger->log(Zend\Log\Logger::ERR, "Curl error: $csv_file\n{$s->resource_id}\n".curl_error($upload));
     }
     else {
         $json = json_decode($response);
         if (!$json) {
-            SkidderService::log($config->skidder->url, $config->skidder->application_id, [
-                'script'  => $ckan_url,
-                'type'    => 'CKAN invalid response',
-                'message' => "$csv_file\n{$s->resource_id}\n$response"
-            ]);
+            $logger->log(Zend\Log\Logger::ERR, "Curl error: $csv_file\n{$s->resource_id}\n$response");
         }
 
         if (!$json->success) {
-            SkidderService::log($config->skidder->url, $config->skidder->application_id, [
-                'script'  => $ckan_url,
-                'type'    => 'CKAN error: '.$json->error->__type,
-                'message' => "$csv_file\n{$s->resource_id}\n".$json->error->message
-            ]);
+            $logger->log(Zend\Log\Logger::ERR, "Curl error: $csv_file\n{$s->resource_id}\n".$json->error->message);
         }
     }
 }
