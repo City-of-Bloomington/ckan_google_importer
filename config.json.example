@@ -1,0 +1,19 @@
+{
+    "tmp_dir": ".",
+    "skidder": {
+        "url": "https://apps.bloomington.in.gov/skidder",
+        "application_id": 999
+    },
+    "ckan": {
+        "url": "https://data.ckan.somewhere",
+        "api_key" : "XXXX-XX-XX-XXXXX"
+    },
+    "spreadsheets": [
+        {
+            "name":           "Potholes",
+            "resource_id":    "XXXX-XX-XX-XXXXX",
+            "spreadsheet_id": "XXXX-XX-XX-XXXXX",
+            "sheet_id":       "12456789"
+        }
+    ]
+}
